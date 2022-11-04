@@ -10,6 +10,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
+//{"clientId":"1", "routeId":"1"}
+//{"clientId":"2", "routeId":"2"}
+//{"clientId":"3", "routeId":"3"}
+
 func init() {
 	err := godotenv.Load()
 
