@@ -2,20 +2,30 @@ package main
 
 import (
 	"fmt"
+	"log"
 
-	"com.anacleto.location-simulator/application/route"
+	kafka2 "com.anacleto.location-simulator/application/kafka"
+	"com.anacleto.location-simulator/config/kafka"
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/joho/godotenv"
 )
 
-func main() {
+func init() {
+	err := godotenv.Load()
 
-	route := route.Route{
-		ID:       "1",
-		ClientId: "1",
+	if err != nil {
+		log.Fatal("Error loading .env file!")
 	}
+}
 
-	route.LoadPositions()
-	stringJson, _ := route.ExportJsonPositions()
+func main() {
+	msgChan := make(chan *ckafka.Message)
+	consumer := kafka.NewKafkaConsumer(msgChan)
 
-	fmt.Println(stringJson[0])
+	go consumer.Consume()
 
+	for msg := range msgChan {
+		fmt.Println(string(msg.Value))
+		go kafka2.Produce(msg)
+	}
 }

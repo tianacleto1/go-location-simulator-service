@@ -27,9 +27,13 @@ type PartialRoutePosition struct {
 	Finished bool      `json:"finished"`
 }
 
+func NewRoute() *Route {
+	return &Route{}
+}
+
 func (r *Route) LoadPositions() error {
 	if r.ID == "" {
-		return errors.New("Route id not informed!")
+		return errors.New("Route id not informed")
 	}
 
 	f, err := os.Open("destinations/" + r.ID + ".txt")
